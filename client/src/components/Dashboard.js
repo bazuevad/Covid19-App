@@ -95,30 +95,16 @@ export default class Dashboard extends React.Component {
       <div className="Dashboard">
 
         <PageNavbar active="dashboard" />
-
-        <br />
-        <div className="container movies-container">
-          <div className="jumbotron">
-            <div className="h5">Keywords</div>
-            <div className="keywords-container">
-              {this.state.keywords}
-            </div>
-          </div>
-
-          <br />
-          <div className="jumbotron">
-            <div className="movies-container">
-              <div className="movies-header">
-                <div className="header-lg"><strong>Title</strong></div>
-                <div className="header"><strong>Rating</strong></div>
-                <div className="header"><strong>Vote Count</strong></div>
-              </div>
-              <div className="results-container" id="results">
-                {this.state.movies}
-              </div>
-            </div>
-          </div>
-        </div>
+        <div class="container">
+					<img src={require('C:/Users/Cong Han/OneDrive/Desktop/CIS550/hw2/client/src/image/mina.jpg')} className="image"/>
+						<div class="middle">
+							<a href="https://baidu.com">
+    							<div class="text">Mina</div>
+							</a>
+  						</div>
+		  		</div>
+          
+        
       </div>
     );
   };

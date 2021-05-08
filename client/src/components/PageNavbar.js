@@ -12,7 +12,8 @@ export default class PageNavbar extends React.Component {
 
 
 	componentDidMount() {
-		const pageList = ['dashboard', 'recommendations', 'bestmovies'];
+		const pageList = ['dashboard', 'recommendations', 'bestmovies',"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""
+	,"","","","","","","","","","","","","","","","","","","","",""];
 
 		let navbarDivs = pageList.map((page, i) => {
 			if (this.props.active === page) {
@@ -32,7 +33,7 @@ export default class PageNavbar extends React.Component {
 		return (
 			<div className="PageNavbar">
 				<nav className="navbar navbar-expand-lg navbar-light bg-light">
-			      <span className="navbar-brand center">CIS 550 HW2</span>
+			      <span className="navbar-brand center">Covid-19</span>
 
 			      <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 			        <div className="navbar-nav">
@@ -40,9 +41,8 @@ export default class PageNavbar extends React.Component {
 						
 
 				<div class="g-signin2" data-onsuccess="onSignIn" ></div>
-        		<div id="content"></div>
-        		<button onclick="signOut()">Sign out</button>
-       
+        		<div id="content" ></div>
+
       
 			        </div>
 

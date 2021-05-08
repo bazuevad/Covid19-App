@@ -189,11 +189,123 @@ LIMIT 100;
 
 };
 
+
+
+/*Case Situation */
+
+/*Covid Info */
+const getCountry = (req, res) => {
+  const query = `
+  Select distinct Country_Region as country_name
+  from Confirm_cases
+  where Country_Region  != '"Bahamas'
+  order by Country_Region;
+  `;
+
+  connection.query(query, (err, rows, fields) => {
+    if (err) console.log(rows);
+    else {res.json(rows);
+    console.log(rows)};
+  });
+};
+
+const getProvince = (req, res) => {
+  var inputCountry = req.params.selectedCountry;
+  console.log(inputCountry);
+  const query = `
+  Select distinct Province_State as province_name
+  from Confirm_cases
+  where Country_Region = '${inputCountry}'
+  order by Country_Region;
+  `;
+
+  connection.query(query, (err, rows, fields) => {
+    if (err) console.log(rows);
+    else res.json(rows);
+  });
+};
+
+const getStartTime = (req, res) => {
+  const query = `Select distinct Date(Date) as StartDate 
+  from Confirm_cases
+  where Date(Date) >  '2020-01-01'
+  order by Date;`
+;
+
+  connection.query(query, (err, rows, fields) => {
+    if (err) console.log(rows);
+    else res.json(rows);
+  });
+};
+
+
+const getEndTime = (req, res) => {
+  var inputTime = req.params.selectedStartTime;
+  const query = `Select distinct Date(Date) as EndDate 
+  from Confirm_cases
+  where Date(Date) >  '${inputTime}'
+  order by Date;`
+;
+
+  connection.query(query, (err, rows, fields) => {
+    if (err) console.log(rows);
+    else res.json(rows);
+  });
+};
+
+const getDisplayed = (req, res) => {
+  // console.log(req.params);
+  var inputCountry = req.params.country;
+  var inputProvince = req.params.province;
+  var inputTime = req.params.selectedStartTime;
+  var endTime = req.params.selectedEndTime;
+  const query = `
+  Select  c.Country_Region as Country, c.Province_State as Province,sum(c.Confirmed) as Confirm,sum(c.Recovered) as Recover,sum(c.Deaths) as Death
+  from covid_all c
+  where c.Country_Region = '${inputCountry}' and c.Province_State = '${inputProvince}'  and Date(c.Date)>'${inputTime}'  and Date(c.Date)<'${endTime}' 
+  group by c.Country_Region,c.Province_State; 
+  `
+  
+  /*`
+  Select c.Country_Region as Country, c.Province_State as Province,c.Confirm,d.Death,r.Recover
+  from Confirm_cases c,Death_cases d, Recover_cases r
+  where c.Country_Region = '${inputCountry}' and c.Province_State = '${inputProvince}' 
+  limit 10;
+   `*/
+  // const query = `Select c.Country_Region as Country, c.Province_State as Province,c.Confirm,d.Death,r.Recover
+  // from Confirm_cases c,Death_cases d, Recover_cases r
+  // where c.Country_Region = 'China' and c.Province_State = 'Guizhou'
+  // limit 8;`
+;
+
+  connection.query(query, (err, rows, fields) => {
+
+    if (err) console.log(rows);
+    else {
+  
+    // console.log(rows); 
+    // console.log(req.params.country);
+    // console.log(req.params.province);
+    // console.log(req.params.selectedStartTime);
+    // console.log(req.params.selectedEndTime);
+    res.json(rows);}
+  });
+};
+
+
+
 module.exports = {
 	getTop20Keywords: getTop20Keywords,
 	getTopMoviesWithKeyword: getTopMoviesWithKeyword,
 	getRecs: getRecs,
   getDecades: getDecades,
   getGenres: getGenres,
-  bestMoviesPerDecadeGenre: bestMoviesPerDecadeGenre
+  bestMoviesPerDecadeGenre: bestMoviesPerDecadeGenre,
+
+
+  getCountry:getCountry,
+  getProvince:getProvince,
+  getStartTime:getStartTime,
+  getEndTime:getEndTime,
+  getDisplayed:getDisplayed
 };

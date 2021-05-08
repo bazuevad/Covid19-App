@@ -36,6 +36,22 @@ app.get('/genres', routes.getGenres);
 app.get('/bestmovies/:selectedDecade/:selectedGenre', routes.bestMoviesPerDecadeGenre);
 
 
+/*Case Situation*/
+app.get('/country', routes.getCountry);
+
+app.get('/province/:selectedCountry', routes.getProvince);
+
+app.get('/startTime', routes.getStartTime);
+
+
+app.get('/startTime/:selectedStartTime', routes.getEndTime);
+
+app.get('/display/:country/:province/:selectedStartTime/:selectedEndTime',routes.getDisplayed)
+
+
+
+
+
 app.listen(8081, () => {
 	console.log(`Server listening on PORT 8081`);
 });

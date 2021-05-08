@@ -30,6 +30,33 @@
   <body background="bg.jpg" style="background-size: 100%;">
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+				<meta name="google-signin-client_id" content="635499259263-u6e6mo5id0qaj8pn0d6smbm6r7e8623b.apps.googleusercontent.com"></meta>
+        <script>
+          function onSignIn(googleUser){
+
+            var profile = googleUser.getBasicProfile()
+            var element = document.querySelector('#content')
+            element.innerText = 'Hi, ' + profile.getName()
+            element.innerText.hspace = 200
+            var image = document.createElement('img')
+            image.height=40
+            image.weight=40
+            //image.hspace = 1000;
+            image.setAttribute('src',profile.getImageUrl())
+            console.log('tttttttttttttt')
+            element.append(image)
+          }
+    
+          function signOut() {
+              gapi.auth2.getAuthInstance().signOut().then(function() {
+                auth2.disconnect();
+              console.log('user signed out')
+          })
+}
+         
+        </script> 
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

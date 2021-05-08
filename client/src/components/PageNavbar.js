@@ -10,6 +10,7 @@ export default class PageNavbar extends React.Component {
 		};
 	};
 
+
 	componentDidMount() {
 		const pageList = ['dashboard', 'recommendations', 'bestmovies'];
 
@@ -26,18 +27,32 @@ export default class PageNavbar extends React.Component {
 		});
 	};
 
+
 	render() {
 		return (
 			<div className="PageNavbar">
 				<nav className="navbar navbar-expand-lg navbar-light bg-light">
 			      <span className="navbar-brand center">CIS 550 HW2</span>
+
 			      <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 			        <div className="navbar-nav">
 			        	{this.state.navDivs}
+						
+
+				<div class="g-signin2" data-onsuccess="onSignIn" ></div>
+        		<div id="content"></div>
+        		<button onclick="signOut()">Sign out</button>
+       
+      
 			        </div>
+
 			      </div>
 			    </nav>
+				
+				
 			</div>
+			
     );
 	};
+	
 };

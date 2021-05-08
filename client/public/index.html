@@ -45,16 +45,10 @@
             image.weight=40
             //image.hspace = 1000;
             image.setAttribute('src',profile.getImageUrl())
-            console.log('tttttttttttttt')
+            
             element.append(image)
           }
     
-          function signOut() {
-              gapi.auth2.getAuthInstance().signOut().then(function() {
-                auth2.disconnect();
-              console.log('user signed out')
-          })
-}
          
         </script> 
     <!--

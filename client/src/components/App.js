@@ -30,8 +30,8 @@ export default class App extends React.Component {
 							render={() => <Recommendations />}
 						/>
 						<Route
-							path="/bestmovies"
-							render={() => <groups />}
+							path="/groups"
+							render={() => <Bestmovies />}
 						/>
 					</Switch>
 				</Router>

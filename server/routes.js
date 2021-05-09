@@ -112,75 +112,87 @@ const getRecs = (req, res) => {
 };
 
 
-/* ---- Q3a (Best Movies) ---- */
-const getDecades = (req, res) => {
-    const query = `
-    SELECT FLOOR(release_year/10)*10 as Decade
-    FROM movie
-    GROUP BY FLOOR(release_year/10)*10
-    ORDER BY FLOOR(release_year/10)*10;
-    `;
-
-    connection.query(query, (err, rows, fields) => {
-      if (err) console.log(err);
-      else res.json(rows);
-    });
-};
-
-
-/* ---- (Best Movies) ---- */
-const getGenres = (req, res) => {
-  const query = `
-    SELECT name
-    FROM genre
-    WHERE name <> 'genres'
-    ORDER BY name ASC;
-  `;
-
-  connection.query(query, (err, rows, fields) => {
-    if (err) console.log(err);
-    else res.json(rows);
-  });
-};
 
 
 /* ---- Q3b (Best Movies) ---- */
-const bestMoviesPerDecadeGenre = (req, res) => {
-    var inputDecade = req.params.selectedDecade;
-    var inputGenre = req.params.selectedGenre;
-    console.log(inputDecade);
-    console.log(inputGenre);
+const groupExploration = (req, res) => {
+        var inputSex = req.params.selectedSex;
+    var inputAge = req.params.selectedAgegroup;
+    var inputRace = req.params.selectedRace;
+    console.log(inputSex);
+    console.log(inputAge);
+    console.log(inputRace);
     const query = `
-WITH movie_in_decade AS (
-SELECT m.movie_id, m.title, m.rating, mg.genre_name
-FROM movie m, movie_genre mg
-WHERE m.release_year>='${inputDecade}' AND m.release_year-10<'${inputDecade}'
-AND mg.movie_id = m.movie_id
-),
-all_average_in_decade AS (
-SELECT mid.genre_name, AVG(mid.rating) as avgr
-FROM movie_in_decade mid
-GROUP BY mid.genre_name
-),
-select_genre_movie AS (
-SELECT *
-FROM movie_in_decade
-WHERE genre_name="${inputGenre}"
-),
-finals AS (
-SELECT sgm.movie_id, sgm.title, sgm.rating, mg.genre_name, aaid.avgr
-FROM select_genre_movie sgm, movie_genre mg, all_average_in_decade aaid
-WHERE sgm.movie_id=mg.movie_id
-AND mg.genre_name=aaid.genre_name
-ORDER BY sgm.title
-)
-SELECT DISTINCT f.movie_id, f.title, f.rating
-FROM finals f
-WHERE f.rating > f.avgr
-AND f.movie_id NOT IN (SELECT movie_id FROM finals WHERE rating<=avgr)
-ORDER BY f.title
-LIMIT 100;
+    WITH a AS (
+        SELECT *
+        FROM Covid_groups
+        WHERE sex="${inputSex}"
+        AND age_group="${inputAge}"
+        AND hosp_yn='Yes'
+        ),
+        b AS (
+            SELECT *
+            FROM Covid_groups
+        WHERE sex="${inputSex}"
+        AND age_group="${inputAge}"
+            AND icu_yn='Yes'
+        ),
+        c AS (
+            SELECT *
+            FROM Covid_groups
+        WHERE sex="${inputSex}"
+        AND age_group="${inputAge}"
+            AND death_yn='Yes'
+        ),
+        tmp1 AS (
+        SELECT race_ethnicity_combined, COUNT(*) AS race_count
+        FROM a
+        GROUP BY race_ethnicity_combined
+        ),
+        T1 AS (
+        SELECT SUM(race_count) As c
+        FROM tmp1
+        ),
+        T2 AS (
+        SELECT SUM(race_count) As c
+        FROM tmp1
+        WHERE race_ethnicity_combined="${inputRace}"
+        ),
+        tmp2 AS (
+        SELECT race_ethnicity_combined, COUNT(*) AS race_count
+        FROM b
+        GROUP BY race_ethnicity_combined
+        ),
+        T3 AS (
+        SELECT SUM(race_count) As c
+        FROM tmp2
+        ),
+        T4 AS (
+        SELECT SUM(race_count) As c
+        FROM tmp2
+        WHERE race_ethnicity_combined="${inputRace}"
+        ),
+        tmp3 AS (
+        SELECT race_ethnicity_combined, COUNT(*) AS race_count
+        FROM c
+        GROUP BY race_ethnicity_combined
+        ),
+        T5 AS (
+        SELECT SUM(race_count) As c
+        FROM tmp3
+        ),
+        T6 AS (
+        SELECT SUM(race_count) As c
+        FROM tmp3
+        WHERE race_ethnicity_combined="${inputRace}"
+        )
+        SELECT IFNULL((CAST(T2.c AS FLOAT)/T1.c), 0) AS ratio1, IFNULL((CAST(T4.c AS FLOAT)/T3.c), 0) AS ratio2, IFNULL((CAST(T6.c AS FLOAT)/T5.c), 0) AS ratio3
+        FROM T1, T2, T3, T4, T5, T6;
+
     `;
+//m.release_year-10<'${inputDecade}'//
+ console.log(query);
+    
 
     connection.query(query, (err, rows, fields) => {
       if (err) console.log(err);
@@ -298,10 +310,7 @@ module.exports = {
 	getTop20Keywords: getTop20Keywords,
 	getTopMoviesWithKeyword: getTopMoviesWithKeyword,
 	getRecs: getRecs,
-  getDecades: getDecades,
-  getGenres: getGenres,
-  bestMoviesPerDecadeGenre: bestMoviesPerDecadeGenre,
-
+groupExploration: groupExploration,
 
   getCountry:getCountry,
   getProvince:getProvince,

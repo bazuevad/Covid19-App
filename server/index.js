@@ -30,8 +30,12 @@ app.get('/recommendations/:title', routes.getRecs);
 /* ---- (Best Movies) ---- */
 app.get('/decades', routes.getDecades);
 app.get('/genres', routes.getGenres);
-
-
+app.get('/map', routes.getMap);
+app.get('/week', routes.getWeeks);
+app.get('/byWeek/:selectedWeek', routes.getByWeek);
+app.get('/nutrition', routes.getCountries);
+app.get('/byCountry/:selectedCountry', routes.getForCountry);
+app.get('/foodRecommendation/:selectedCountry', routes.getRecForCountry);
 /* ---- Q3b (Best Movies) ---- */
 app.get('/bestmovies/:selectedDecade/:selectedGenre', routes.bestMoviesPerDecadeGenre);
 

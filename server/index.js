@@ -27,13 +27,9 @@ app.get('/keywords/:keyword', routes.getTopMoviesWithKeyword);
 app.get('/recommendations/:title', routes.getRecs);
 
 
-/* ---- (Best Movies) ---- */
-app.get('/decades', routes.getDecades);
-app.get('/genres', routes.getGenres);
+/* ---- Covid group exploration ---- */
+app.get('/groups/:selectedSex/:selectedAgegroup/:selectedRace', routes.groupExploration);
 
-
-/* ---- Q3b (Best Movies) ---- */
-app.get('/bestmovies/:selectedDecade/:selectedGenre', routes.bestMoviesPerDecadeGenre);
 
 
 /*Case Situation*/

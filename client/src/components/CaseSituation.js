@@ -54,7 +54,7 @@ export default class CaseSituation extends React.Component {
 	  <option
 		  key={i}
 		  className="CountryOption"
-		  value={CountryObj.country_name}>{CountryObj.country_name}
+		  value={CountryObj.cou}>{CountryObj.cou}
 	  </option>
 	  );
 
@@ -215,25 +215,69 @@ export default class CaseSituation extends React.Component {
 	}
 
 	submitDisplay() {
+		console.log(this.state.selectedCountry);
+		console.log(this.state.selectedProvince);
+		console.log(this.state.selectedStartTime);
+		console.log(this.state.selectedEndTime);
+		var fixedStart = this.state.selectedStartTime.substring(0,10);
+		var fixedEnd = this.state.selectedEndTime.substring(0,10);
+		if(this.state.selectedProvince){
+			fetch("http://localhost:8081/display/"+this.state.selectedCountry+"/"+this.state.selectedProvince+"/"+fixedStart+"/"+fixedEnd,
+			{
+			method: 'GET' // The type of HTTP request.
+			}).then(res =>{
+			console.log(res);
+			return res.json();
+			}, err => {
+			// Print the error if there is one.
+			console.log(err);
+		}).then(displayList => {
+			if (!displayList){
+				
+				return;}
+
+			console.log(displayList);
+			const displayDivs = displayList.map((displayObj, i) =>
+				<CaseDisplay
+					key={i}
+					country={displayObj.Country}
+					province={displayObj.Province}
+					confirmed={displayObj.Confirm}
+					death={displayObj.Death}
+					recovered={displayObj.Recover}
+
+				/>
+			);
+			
 		
-		fetch("http://localhost:8081/display/"+this.state.selectedCountry+"/"+this.state.selectedProvince+"/"+this.state.selectedStartTime+"/"+this.state.selectedEndTime,
+			// Set the state of the keywords list to the value returned by the HTTP response from the server.
+			this.setState({
+				cases:displayDivs
+			});
+			}, err => {
+			// Print the error if there is one.
+			console.log(err);
+			});
+		}
+	else{
+		fetch("http://localhost:8081/display/"+this.state.selectedCountry+"/"+null+"/"+fixedStart+"/"+fixedEnd,
 		{
-		  method: 'GET' // The type of HTTP request.
+		method: 'GET' // The type of HTTP request.
 		}).then(res =>{
-		{console.log(res);
-		  return res.json();}
+		console.log(res);
+		return res.json();
 		}, err => {
-		  // Print the error if there is one.
-		  console.log(err);
-	  }).then(displayList => {
-		  if (!displayList){
+		// Print the error if there is one.
+		console.log(err);
+	}).then(displayList => {
+		if (!displayList){
 			
 			return;}
 
-         console.log(displayList);
-		 const displayDivs = displayList.map((displayObj, i) =>
+		console.log(displayList);
+		const displayDivs = displayList.map((displayObj, i) =>
 			<CaseDisplay
-			    key={i}
+				key={i}
 				country={displayObj.Country}
 				province={displayObj.Province}
 				confirmed={displayObj.Confirm}
@@ -241,16 +285,18 @@ export default class CaseSituation extends React.Component {
 				recovered={displayObj.Recover}
 
 			/>
-		  );
-
-		  // Set the state of the keywords list to the value returned by the HTTP response from the server.
-		  this.setState({
+		);
+		
+	
+		// Set the state of the keywords list to the value returned by the HTTP response from the server.
+		this.setState({
 			cases:displayDivs
-		  });
-		}, err => {
-		  // Print the error if there is one.
-		  console.log(err);
 		});
+		}, err => {
+		// Print the error if there is one.
+		console.log(err);
+		});
+	}
 
 	};
 

@@ -184,7 +184,7 @@ const getCountries = (req, res) => {
   connection.query(query, function(err, rows, fields) {
     if (err) console.log(err);
     else {
-      console.log(rows);
+      // console.log(rows);
       res.json(rows);
     }
   });
@@ -223,7 +223,7 @@ const getCountries = (req, res) => {
 /* ---- Q2 (Recommendations) ---- */
 const getRecs = (req, res) => {
     var inputMovie = req.params.title;
-    console.log(inputMovie);
+    // console.log(inputMovie);
     // TODO: (3) - Edit query below
     const query = `
     WITH a AS (
@@ -270,7 +270,7 @@ const getRecs = (req, res) => {
     connection.query(query, function(err, rows, fields) {
       if (err) console.log(err);
       else {
-        console.log(rows);
+        // console.log(rows);
         res.json(rows);
       }
     });
@@ -285,9 +285,9 @@ const groupExploration = (req, res) => {
         var inputSex = req.params.selectedSex;
     var inputAge = req.params.selectedAgegroup;
     var inputRace = req.params.selectedRace;
-    console.log(inputSex);
-    console.log(inputAge);
-    console.log(inputRace);
+    // console.log(inputSex);
+    // console.log(inputAge);
+    // console.log(inputRace);
     const query = `
     WITH a AS (
         SELECT *
@@ -373,23 +373,26 @@ const groupExploration = (req, res) => {
 
 /*Covid Info */
 const getCountry = (req, res) => {
-  const query = `
-  Select distinct Country_Region as country_name
-  from Confirm_cases
-  where Country_Region  != '"Bahamas'
-  order by Country_Region;
+  // const query = `
+  // Select distinct Country_Region as country_name
+  // from Confirm_cases
+  // where Country_Region  != '"Bahamas'
+  // order by Country_Region;
+  // `;
+const query = `
+SELECT cou FROM cis550_project.Faster_countries
+WHERE try_='0';
   `;
-
   connection.query(query, (err, rows, fields) => {
     if (err) console.log(rows);
-    else {res.json(rows);
-    console.log(rows)};
+    else {res.json(rows);}
+    // console.log(rows)};
   });
 };
 
 const getProvince = (req, res) => {
   var inputCountry = req.params.selectedCountry;
-  console.log(inputCountry);
+  // console.log(inputCountry);
   const query = `
   Select distinct Province_State as province_name
   from Confirm_cases
@@ -451,12 +454,25 @@ const getDisplayed = (req, res) => {
   var inputProvince = req.params.province;
   var inputTime = req.params.selectedStartTime;
   var endTime = req.params.selectedEndTime;
-  const query = `
+  var query=null;
+  console.log(inputProvince);
+  if(inputProvince!="null"){
+    query = `
   Select  c.Country_Region as Country, c.Province_State as Province,sum(c.Confirmed) as Confirm,sum(c.Recovered) as Recover,sum(c.Deaths) as Death
   from covid_all c
   where c.Country_Region = '${inputCountry}' and c.Province_State = '${inputProvince}'  and Date(c.Date)>'${inputTime}'  and Date(c.Date)<'${endTime}' 
   group by c.Country_Region,c.Province_State; 
-  `
+  `;
+  }
+  else{
+    query = `
+    Select  c.Country_Region as Country, c.Province_State as Province,sum(c.Confirmed) as Confirm,sum(c.Recovered) as Recover,sum(c.Deaths) as Death
+    from covid_all c
+    where c.Country_Region = '${inputCountry}' and Date(c.Date)>'${inputTime}'  and Date(c.Date)<'${endTime}' 
+    group by c.Country_Region,c.Province_State; 
+    `;
+  }
+  
   
   /*`
   Select c.Country_Region as Country, c.Province_State as Province,c.Confirm,d.Death,r.Recover
@@ -468,11 +484,13 @@ const getDisplayed = (req, res) => {
   // from Confirm_cases c,Death_cases d, Recover_cases r
   // where c.Country_Region = 'China' and c.Province_State = 'Guizhou'
   // limit 8;`
-;
+
 
   connection.query(query, (err, rows, fields) => {
 
-    if (err) console.log(rows);
+    if (err){
+      console.log(err);
+    } 
     else {
   
     // console.log(rows); 
@@ -480,7 +498,9 @@ const getDisplayed = (req, res) => {
     // console.log(req.params.province);
     // console.log(req.params.selectedStartTime);
     // console.log(req.params.selectedEndTime);
-    res.json(rows);}
+    // console.log(res.json());
+    res.json(rows);
+  }
   });
 };
 

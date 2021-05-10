@@ -97,9 +97,9 @@ export default class Nutrition extends React.Component {
             // labelPosition="25%"
             
             label={(x) => { return x.dataEntry.title;}}
-            labelStyle={{ color: "white",fontSize:"4px",fill:"white" }}
+            labelStyle={{ color: "white",fontSize:"2px",fill:"white" }}
             labelPosition="105"
-            radius = "35"
+            radius = "25"
             background='#FFF0F5'
             data={[
                 { title: 'Alcoholic Beverages, '+ round(nutrObj.Alcoholic_Beverages/(nutrObj.Alcoholic_Beverages+nutrObj.Animal_fats+ nutrObj.Animal_Products+nutrObj.Cereals+nutrObj.Fish_Seafood+nutrObj.Fruits+nutrObj.Milk+nutrObj.Starchy_Roots+nutrObj.Sugar+nutrObj.Vegetable_Oils+nutrObj.Vegetable_Products)*100,3)+'%', value: nutrObj.Alcoholic_Beverages/(nutrObj.Alcoholic_Beverages+nutrObj.Animal_fats+ nutrObj.Animal_Products+nutrObj.Cereals+nutrObj.Fish_Seafood+nutrObj.Fruits+nutrObj.Milk+nutrObj.Starchy_Roots+nutrObj.Sugar+nutrObj.Vegetable_Oils+nutrObj.Vegetable_Products)*100, color: '#E38627' },
@@ -173,27 +173,45 @@ export default class Nutrition extends React.Component {
             </select>
             <button className="submit-btn" id="submitBtn" onClick={this.submitCountryChange}>Submit</button>
         </div>
-        {/* <div id = "chart"class="jumbotron jumbotron-fluid bg-dark text-white"> */}
+        
+        <div id = "chart"class="jumbotron jumbotron-fluid bg-dark text-white">
+        <div id = "foodStats"class="jumbotron jumbotron-fluid bg-dark text-white">
+            <p>On average, people in countries with best death to confirmed cases ratio consume: </p>
+                <table style={{border: "2px solid white"}}>
+                    <tr style={{border: "2px solid white"}}>
+                        <th style={{border: "2px solid white"}}>alcohol, %  </th>
+                        <th style={{border: "2px solid white"}}>vegetable oil,%  </th>
+                        <th style={{border: "2px solid white"}}>sugar,%  </th>
+                        <th style={{border: "2px solid white"}}>milk,%  </th>
+                        <th style={{border: "2px solid white"}}>fruits,%  </th>
+                        <th style={{border: "2px solid white"}}>fish,%  </th>
+                        <th style={{border: "2px solid white"}}>cereals,%  </th>
+                        <th style={{border: "2px solid white"}}>starchy roots,%  </th>
+                        <th style={{border: "2px solid white"}}>animal prod,%  </th>
+                        <th style={{border: "2px solid white"}}>animal fats,%  </th>
+                        <th style={{border: "2px solid white"}}>vegetable prod,%  </th>
+                        <th style={{border: "2px solid white"}}>meat,%  </th>
+                    </tr>
+                    <tr>
+                    <td style={{border: "2px solid white"}}>{this.state.alcohol}</td>
+                    <td style={{border: "2px solid white"}}>{this.state.oil}</td>
+                    <td style={{border: "2px solid white"}}>{this.state.sugar} </td>
+                    <td style={{border: "2px solid white"}}>{this.state.milk}</td>
+                    <td style={{border: "2px solid white"}}>{this.state.fruits} </td>
+                    <td style={{border: "2px solid white"}}>{this.state.fish} </td>
+                    <td style={{border: "2px solid white"}}>{this.state.cereals} </td>
+                    <td style={{border: "2px solid white"}}>{this.state.roots} </td>
+                    <td style={{border: "2px solid white"}}>{this.state.animP} </td>
+                    <td style={{border: "2px solid white"}}>{this.state.animF} </td>
+                    <td style={{border: "2px solid white"}}>{this.state.veg} </td>
+                    <td style={{border: "2px solid white"}}>{this.state.meat} </td>
+                    </tr>
+                </table>
+        </div>
         <div className="chart" id="chart" >
             {this.state.chart}
-		</div>
-        {/* </div> */}
-        <div id = "foodStats" class="jumbotron jumbotron-fluid bg-dark text-white">
-        <div id = "foodStats" style={{ color: 'white' }}>
-            <p>On average, people in countries with best death to confirmed cases ratio consume: </p>
-                <p>{this.state.alcohol} % of alcohol</p>
-                <p>{this.state.oil} % of vegetable oil</p>
-                <p>{this.state.sugar} % of sugar</p>
-                <p>{this.state.milk} % of milk</p>
-                <p>{this.state.fruits} % of fruits</p>
-                <p>{this.state.fish} % of Fish And Seafood</p>
-                <p>{this.state.cereals} % of cereals</p> 
-                <p>{this.state.roots} % of starchy roots</p>
-                <p>{this.state.animP} % of animal products</p>
-                <p>{this.state.animF} % of animal fats</p> 
-                <p>{this.state.veg} % of vegetable products</p>
-                <p>{this.state.meat} % of meat</p>
         </div>
+
         </div>
     </div>
     );

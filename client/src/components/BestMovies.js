@@ -123,9 +123,9 @@ export default class BestMovies extends React.Component {
 		  const resDivs = resList.map((resObj, i) =>
 			<BestMoviesRow
 			    key={i}
-				ratio1={resObj.ratio1}
-				ratio2={resObj.ratio2}
-				ratio3={resObj.ratio3}
+				title={resObj.ratio1}
+				movie_id={resObj.ratio2}
+				rating={resObj.ratio3}
 			/>
 		  );
 

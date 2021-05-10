@@ -456,7 +456,7 @@ const getDisplayed = (req, res) => {
   var endTime = req.params.selectedEndTime;
   var query=null;
   console.log(inputProvince);
-  if(inputProvince=="null"){
+  if(inputProvince!="null"){
     query = `
   Select  c.Country_Region as Country, c.Province_State as Province,sum(c.Confirmed) as Confirm,sum(c.Recovered) as Recover,sum(c.Deaths) as Death
   from covid_all c

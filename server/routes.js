@@ -192,32 +192,32 @@ const getCountries = (req, res) => {
 
 
 
-/* ---- Q1b (Dashboard) ---- */
-const getTopMoviesWithKeyword = (req, res) => {
-    var inputLogin = req.params.keyword;
+// /* ---- Q1b (Dashboard) ---- */
+// const getTopMoviesWithKeyword = (req, res) => {
+//     var inputLogin = req.params.keyword;
 
-    // TODO: (3) - Edit query below
-    const query = `
-    WITH tmp AS (
-        SELECT m.title, m.rating, m.num_ratings
-        FROM movie_keyword mk, movie m
-        WHERE mk.kwd_name = "${inputLogin.slice(1)}"
-        AND m.movie_id=mk.movie_id
-    )
-    SELECT *
-    FROM tmp
-    ORDER BY rating DESC, num_ratings DESC
-    LIMIT 10;
-    `;
-    connection.query(query, function(err, rows, fields) {
-      if (err) console.log(err);
-      else {
-        console.log(rows);
-        res.json(rows);
-      }
-    });
+//     // TODO: (3) - Edit query below
+//     const query = `
+//     WITH tmp AS (
+//         SELECT m.title, m.rating, m.num_ratings
+//         FROM movie_keyword mk, movie m
+//         WHERE mk.kwd_name = "${inputLogin.slice(1)}"
+//         AND m.movie_id=mk.movie_id
+//     )
+//     SELECT *
+//     FROM tmp
+//     ORDER BY rating DESC, num_ratings DESC
+//     LIMIT 10;
+//     `;
+//     connection.query(query, function(err, rows, fields) {
+//       if (err) console.log(err);
+//       else {
+//         console.log(rows);
+//         res.json(rows);
+//       }
+//     });
 
-};
+// };
 
 
 /* ---- Q2 (Recommendations) ---- */
@@ -278,33 +278,127 @@ const getRecs = (req, res) => {
 };
 
 
-// /* ---- Q3a (Best Movies) ---- */
-// const getDecades = (req, res) => {
-//     const query = `
-//     SELECT FLOOR(release_year/10)*10 as Decade
-//     FROM movie
-//     GROUP BY FLOOR(release_year/10)*10
-//     ORDER BY FLOOR(release_year/10)*10;
-//     `;
-
-//     connection.query(query, (err, rows, fields) => {
-//       if (err) console.log(err);
-//       else res.json(rows);
-//     });
-// };
 
 
-/* ---- (Best Movies) ---- */
-const getGenres = (req, res) => {
+/* ---- Q3b (Best Movies) ---- */
+const groupExploration = (req, res) => {
+        var inputSex = req.params.selectedSex;
+    var inputAge = req.params.selectedAgegroup;
+    var inputRace = req.params.selectedRace;
+    console.log(inputSex);
+    console.log(inputAge);
+    console.log(inputRace);
+    const query = `
+    WITH a AS (
+        SELECT *
+        FROM Covid_groups
+        WHERE sex="${inputSex}"
+        AND age_group="${inputAge}"
+        AND hosp_yn='Yes'
+        ),
+        b AS (
+            SELECT *
+            FROM Covid_groups
+        WHERE sex="${inputSex}"
+        AND age_group="${inputAge}"
+            AND icu_yn='Yes'
+        ),
+        c AS (
+            SELECT *
+            FROM Covid_groups
+        WHERE sex="${inputSex}"
+        AND age_group="${inputAge}"
+            AND death_yn='Yes'
+        ),
+        tmp1 AS (
+        SELECT race_ethnicity_combined, COUNT(*) AS race_count
+        FROM a
+        GROUP BY race_ethnicity_combined
+        ),
+        T1 AS (
+        SELECT SUM(race_count) As c
+        FROM tmp1
+        ),
+        T2 AS (
+        SELECT SUM(race_count) As c
+        FROM tmp1
+        WHERE race_ethnicity_combined="${inputRace}"
+        ),
+        tmp2 AS (
+        SELECT race_ethnicity_combined, COUNT(*) AS race_count
+        FROM b
+        GROUP BY race_ethnicity_combined
+        ),
+        T3 AS (
+        SELECT SUM(race_count) As c
+        FROM tmp2
+        ),
+        T4 AS (
+        SELECT SUM(race_count) As c
+        FROM tmp2
+        WHERE race_ethnicity_combined="${inputRace}"
+        ),
+        tmp3 AS (
+        SELECT race_ethnicity_combined, COUNT(*) AS race_count
+        FROM c
+        GROUP BY race_ethnicity_combined
+        ),
+        T5 AS (
+        SELECT SUM(race_count) As c
+        FROM tmp3
+        ),
+        T6 AS (
+        SELECT SUM(race_count) As c
+        FROM tmp3
+        WHERE race_ethnicity_combined="${inputRace}"
+        )
+        SELECT IFNULL((CAST(T2.c AS FLOAT)/T1.c), 0) AS ratio1, IFNULL((CAST(T4.c AS FLOAT)/T3.c), 0) AS ratio2, IFNULL((CAST(T6.c AS FLOAT)/T5.c), 0) AS ratio3
+        FROM T1, T2, T3, T4, T5, T6;
+
+    `;
+//m.release_year-10<'${inputDecade}'//
+ console.log(query);
+    
+
+    connection.query(query, (err, rows, fields) => {
+      if (err) console.log(err);
+      else res.json(rows);
+    });
+
+};
+
+
+
+/*Case Situation */
+
+/*Covid Info */
+const getCountry = (req, res) => {
   const query = `
-    SELECT name
-    FROM genre
-    WHERE name <> 'genres'
-    ORDER BY name ASC;
+  Select distinct Country_Region as country_name
+  from Confirm_cases
+  where Country_Region  != '"Bahamas'
+  order by Country_Region;
   `;
 
   connection.query(query, (err, rows, fields) => {
-    if (err) console.log(err);
+    if (err) console.log(rows);
+    else {res.json(rows);
+    console.log(rows)};
+  });
+};
+
+const getProvince = (req, res) => {
+  var inputCountry = req.params.selectedCountry;
+  console.log(inputCountry);
+  const query = `
+  Select distinct Province_State as province_name
+  from Confirm_cases
+  where Country_Region = '${inputCountry}'
+  order by Country_Region;
+  `;
+
+  connection.query(query, (err, rows, fields) => {
+    if (err) console.log(rows);
     else res.json(rows);
   });
 };
@@ -323,63 +417,93 @@ const getForCountry = (req, res) => {
   });
 };
 
+const getStartTime = (req, res) => {
+  const query = `Select distinct Date(Date) as StartDate 
+  from Confirm_cases
+  where Date(Date) >  '2020-01-01'
+  order by Date;`
+;
 
-/* ---- Q3b (Best Movies) ---- */
-const bestMoviesPerDecadeGenre = (req, res) => {
-    var inputDecade = req.params.selectedDecade;
-    var inputGenre = req.params.selectedGenre;
-    console.log(inputDecade);
-    console.log(inputGenre);
-    const query = `
-WITH movie_in_decade AS (
-SELECT m.movie_id, m.title, m.rating, mg.genre_name
-FROM movie m, movie_genre mg
-WHERE m.release_year>='${inputDecade}' AND m.release_year-10<'${inputDecade}'
-AND mg.movie_id = m.movie_id
-),
-all_average_in_decade AS (
-SELECT mid.genre_name, AVG(mid.rating) as avgr
-FROM movie_in_decade mid
-GROUP BY mid.genre_name
-),
-select_genre_movie AS (
-SELECT *
-FROM movie_in_decade
-WHERE genre_name="${inputGenre}"
-),
-finals AS (
-SELECT sgm.movie_id, sgm.title, sgm.rating, mg.genre_name, aaid.avgr
-FROM select_genre_movie sgm, movie_genre mg, all_average_in_decade aaid
-WHERE sgm.movie_id=mg.movie_id
-AND mg.genre_name=aaid.genre_name
-ORDER BY sgm.title
-)
-SELECT DISTINCT f.movie_id, f.title, f.rating
-FROM finals f
-WHERE f.rating > f.avgr
-AND f.movie_id NOT IN (SELECT movie_id FROM finals WHERE rating<=avgr)
-ORDER BY f.title
-LIMIT 100;
-    `;
-
-    connection.query(query, (err, rows, fields) => {
-      if (err) console.log(err);
-      else res.json(rows);
-    });
-
+  connection.query(query, (err, rows, fields) => {
+    if (err) console.log(rows);
+    else res.json(rows);
+  });
 };
+
+
+const getEndTime = (req, res) => {
+  var inputTime = req.params.selectedStartTime;
+  const query = `Select distinct Date(Date) as EndDate 
+  from Confirm_cases
+  where Date(Date) >  '${inputTime}'
+  order by Date;`
+;
+
+  connection.query(query, (err, rows, fields) => {
+    if (err) console.log(rows);
+    else res.json(rows);
+  });
+};
+
+const getDisplayed = (req, res) => {
+  // console.log(req.params);
+  var inputCountry = req.params.country;
+  var inputProvince = req.params.province;
+  var inputTime = req.params.selectedStartTime;
+  var endTime = req.params.selectedEndTime;
+  const query = `
+  Select  c.Country_Region as Country, c.Province_State as Province,sum(c.Confirmed) as Confirm,sum(c.Recovered) as Recover,sum(c.Deaths) as Death
+  from covid_all c
+  where c.Country_Region = '${inputCountry}' and c.Province_State = '${inputProvince}'  and Date(c.Date)>'${inputTime}'  and Date(c.Date)<'${endTime}' 
+  group by c.Country_Region,c.Province_State; 
+  `
+  
+  /*`
+  Select c.Country_Region as Country, c.Province_State as Province,c.Confirm,d.Death,r.Recover
+  from Confirm_cases c,Death_cases d, Recover_cases r
+  where c.Country_Region = '${inputCountry}' and c.Province_State = '${inputProvince}' 
+  limit 10;
+   `*/
+  // const query = `Select c.Country_Region as Country, c.Province_State as Province,c.Confirm,d.Death,r.Recover
+  // from Confirm_cases c,Death_cases d, Recover_cases r
+  // where c.Country_Region = 'China' and c.Province_State = 'Guizhou'
+  // limit 8;`
+;
+
+  connection.query(query, (err, rows, fields) => {
+
+    if (err) console.log(rows);
+    else {
+  
+    // console.log(rows); 
+    // console.log(req.params.country);
+    // console.log(req.params.province);
+    // console.log(req.params.selectedStartTime);
+    // console.log(req.params.selectedEndTime);
+    res.json(rows);}
+  });
+};
+
+
 
 module.exports = {
 	getTop20Keywords: getTop20Keywords,
-	getTopMoviesWithKeyword: getTopMoviesWithKeyword,
+	// clgetTopMoviesWithKeyword: getTopMoviesWithKeyword,
 	getRecs: getRecs,
   getDecades: getDecades,
-  getGenres: getGenres,
-  bestMoviesPerDecadeGenre: bestMoviesPerDecadeGenre,
+  // getGenres: getGenres,
+  // bestMoviesPerDecadeGenre: bestMoviesPerDecadeGenre,
   getMap : getMap,
   getWeeks: getWeeks,
   getByWeek:getByWeek,
   getCountries: getCountries,
   getForCountry:getForCountry,
-  getRecForCountry:getRecForCountry
+  getRecForCountry:getRecForCountry,
+groupExploration: groupExploration,
+
+  getCountry:getCountry,
+  getProvince:getProvince,
+  getStartTime:getStartTime,
+  getEndTime:getEndTime,
+  getDisplayed:getDisplayed
 };

@@ -1,0 +1,13 @@
+.chart{
+    width:55%;
+    margin-right:2%;
+    float: left;
+}
+/* .google_map iframe{
+   width:100%;
+} */
+.foodStats {
+    margin-left:2%;
+    width:72%;
+    float: left;
+}

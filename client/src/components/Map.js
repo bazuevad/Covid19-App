@@ -1,5 +1,6 @@
 
 import React, { Component } from 'react';
+import PageNavbar from './PageNavbar';
 import { MapContainer, CircleMarker, TileLayer,Tooltip } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import '../style/Map.css';
@@ -153,6 +154,7 @@ class Map extends Component {
   render() {
     return (
         <div>
+        <PageNavbar active="map" />
         <div className="dropdown-container">
         <select value={this.state.selectedWeek} onChange={this.handleWeekChange} className="dropdown" id="weekDropdown">
             {this.state.week}

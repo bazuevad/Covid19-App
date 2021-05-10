@@ -95,30 +95,33 @@ export default class Dashboard extends React.Component {
       <div className="Dashboard">
 
         <PageNavbar active="dashboard" />
+        <div Class="container1">
+					{/* <img src={require('C:/Users/Cong Han/OneDrive/Desktop/CIS550/hw2/client/src/image/covid1.png')} className="covid1"/> */}
+          <div class="bottom-left">Bottom LeftCoronavirus disease 2019 (COVID-19), also known as the coronavirus, COVID or Covid, is a contagious disease caused
+           by severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2).
+           The first known case was identified in Wuhan, China, in December 2019.The disease has since spread worldwide, leading to an ongoing pandemic.</div>
+		  		</div>
+          
+          <div class="container">
+					{/* <img src={require('C:/Users/Cong Han/OneDrive/Desktop/CIS550/hw2/client/src/image/covid2.png')} className="covid2"/> */}
+						<div class="middle">
+							<a href="https://www.cdc.gov/coronavirus/2019-ncov/index.html">
+    							<div class="text">Symptoms of COVID-19</div>
+							</a>
+  						</div>
+		  		</div>
 
-        <br />
-        <div className="container movies-container">
-          <div className="jumbotron">
-            <div className="h5">Keywords</div>
-            <div className="keywords-container">
-              {this.state.keywords}
-            </div>
-          </div>
+          <div class="container3">
+					{/* <img src={require('C:/Users/Cong Han/OneDrive/Desktop/CIS550/hw2/client/src/image/covid3.jpg')} className="covid3"/> */}
+						<div class="overlay">
+							<a href="https://www.cdc.gov/">
+    							<div class="text3">News of COVID-19</div>
+							</a>
+  						</div>
+		  		</div>
 
-          <br />
-          <div className="jumbotron">
-            <div className="movies-container">
-              <div className="movies-header">
-                <div className="header-lg"><strong>Title</strong></div>
-                <div className="header"><strong>Rating</strong></div>
-                <div className="header"><strong>Vote Count</strong></div>
-              </div>
-              <div className="results-container" id="results">
-                {this.state.movies}
-              </div>
-            </div>
-          </div>
-        </div>
+
+        
       </div>
     );
   };

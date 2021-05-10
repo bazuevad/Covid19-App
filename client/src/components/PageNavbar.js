@@ -10,8 +10,10 @@ export default class PageNavbar extends React.Component {
 		};
 	};
 
+
 	componentDidMount() {
-		const pageList = [ 'map','nutrition'];
+		const pageList = ['dashboard',  'nutrition','map','groups','cases',"","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","","",""
+	,"","","","","","","","","","","","","","","","","","","","",""];
 
 		let navbarDivs = pageList.map((page, i) => {
 			if (this.props.active === page) {
@@ -26,18 +28,31 @@ export default class PageNavbar extends React.Component {
 		});
 	};
 
+
 	render() {
 		return (
 			<div className="PageNavbar">
 				<nav className="navbar navbar-expand-lg navbar-light bg-light">
-			      <span className="navbar-brand center">CIS 550 HW2</span>
+			      <span className="navbar-brand center">Covid-19</span>
+
 			      <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 			        <div className="navbar-nav">
 			        	{this.state.navDivs}
+						
+
+				<div class="g-signin2" data-onsuccess="onSignIn" ></div>
+        		<div id="content" ></div>
+
+      
 			        </div>
+
 			      </div>
 			    </nav>
+				
+				
 			</div>
+			
     );
 	};
+	
 };

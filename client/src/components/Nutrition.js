@@ -1,8 +1,8 @@
 import React, { Component, Chart } from 'react';
 import { MapContainer, CircleMarker, TileLayer,Tooltip } from "react-leaflet";
 import { PieChart } from 'react-minimal-pie-chart';
-
-
+import PageNavbar from './PageNavbar';
+import '../style/Nutrition.css';
 function round(value, decimals) {
     return Number(Math.round(value+'e'+decimals)+'e-'+decimals);
   };
@@ -97,9 +97,9 @@ export default class Nutrition extends React.Component {
             // labelPosition="25%"
             
             label={(x) => { return x.dataEntry.title;}}
-            labelStyle={{ color: "white",fontSize:"2px",fill:"white" }}
+            labelStyle={{ color: "white",fontSize:"4px",fill:"white" }}
             labelPosition="105"
-            radius = "25"
+            radius = "35"
             background='#FFF0F5'
             data={[
                 { title: 'Alcoholic Beverages, '+ round(nutrObj.Alcoholic_Beverages/(nutrObj.Alcoholic_Beverages+nutrObj.Animal_fats+ nutrObj.Animal_Products+nutrObj.Cereals+nutrObj.Fish_Seafood+nutrObj.Fruits+nutrObj.Milk+nutrObj.Starchy_Roots+nutrObj.Sugar+nutrObj.Vegetable_Oils+nutrObj.Vegetable_Products)*100,3)+'%', value: nutrObj.Alcoholic_Beverages/(nutrObj.Alcoholic_Beverages+nutrObj.Animal_fats+ nutrObj.Animal_Products+nutrObj.Cereals+nutrObj.Fish_Seafood+nutrObj.Fruits+nutrObj.Milk+nutrObj.Starchy_Roots+nutrObj.Sugar+nutrObj.Vegetable_Oils+nutrObj.Vegetable_Products)*100, color: '#E38627' },
@@ -166,16 +166,19 @@ export default class Nutrition extends React.Component {
   render() {
     return (
     <div id = "nutrition">
-         
+         <PageNavbar active="nutrition" />
         <div className="dropdown-container">
             <select value={this.state.selectedCountry} onChange={this.handleCountryChange} className="dropdown" id="countryDropdown">
                 {this.state.countries}
             </select>
             <button className="submit-btn" id="submitBtn" onClick={this.submitCountryChange}>Submit</button>
         </div>
+        {/* <div id = "chart"class="jumbotron jumbotron-fluid bg-dark text-white"> */}
         <div className="chart" id="chart" >
             {this.state.chart}
 		</div>
+        {/* </div> */}
+        <div id = "foodStats" class="jumbotron jumbotron-fluid bg-dark text-white">
         <div id = "foodStats" style={{ color: 'white' }}>
             <p>On average, people in countries with best death to confirmed cases ratio consume: </p>
                 <p>{this.state.alcohol} % of alcohol</p>
@@ -190,6 +193,7 @@ export default class Nutrition extends React.Component {
                 <p>{this.state.animF} % of animal fats</p> 
                 <p>{this.state.veg} % of vegetable products</p>
                 <p>{this.state.meat} % of meat</p>
+        </div>
         </div>
     </div>
     );

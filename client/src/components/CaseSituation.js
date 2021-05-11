@@ -343,10 +343,7 @@ export default class CaseSituation extends React.Component {
 							</div>
 			      		</div>
 			    	</div>
-					{/* <div class="jumbotron bg-dark text-white">
-				<div className="h5">Cases Situation</div>
-				<div className="h4">This part returns the top5 countries with the highest total number of confirmed, recovered and death cases with a given time period.</div>
-				  </div> */}
+					
 			  </div>
 			</div>
 		);

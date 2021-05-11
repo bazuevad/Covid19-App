@@ -5,7 +5,6 @@ import {
 	Switch
 } from 'react-router-dom';
 import Dashboard from './Dashboard';
-import Recommendations from './Recommendations';
 import BestMovies from './BestMovies';
 import Map from './Map';
 import Nutrition from './Nutrition';

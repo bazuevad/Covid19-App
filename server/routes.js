@@ -177,7 +177,6 @@ const getWeeks = (req, res) => {
 
 
 const getCountries = (req, res) => {
-  console.log("HELLO");
   const query = `
   SELECT Distinct(Country) FROM cis550_project.Food_supply;
   `;
@@ -192,90 +191,8 @@ const getCountries = (req, res) => {
 
 
 
-// /* ---- Q1b (Dashboard) ---- */
-// const getTopMoviesWithKeyword = (req, res) => {
-//     var inputLogin = req.params.keyword;
-
-//     // TODO: (3) - Edit query below
-//     const query = `
-//     WITH tmp AS (
-//         SELECT m.title, m.rating, m.num_ratings
-//         FROM movie_keyword mk, movie m
-//         WHERE mk.kwd_name = "${inputLogin.slice(1)}"
-//         AND m.movie_id=mk.movie_id
-//     )
-//     SELECT *
-//     FROM tmp
-//     ORDER BY rating DESC, num_ratings DESC
-//     LIMIT 10;
-//     `;
-//     connection.query(query, function(err, rows, fields) {
-//       if (err) console.log(err);
-//       else {
-//         console.log(rows);
-//         res.json(rows);
-//       }
-//     });
-
-// };
 
 
-/* ---- Q2 (Recommendations) ---- */
-const getRecs = (req, res) => {
-    var inputMovie = req.params.title;
-    // console.log(inputMovie);
-    // TODO: (3) - Edit query below
-    const query = `
-    WITH a AS (
-        SELECT ci.cast_id, m.movie_id, m.release_year
-        FROM cast_in ci, movie m
-        WHERE ci.movie_id=m.movie_id AND m.title="${inputMovie}"
-        ),
-        target_cast AS (
-        SELECT a.cast_id, a.movie_id
-        FROM a
-        WHERE a.release_year>=ALL(SELECT release_year FROM a)
-        ),
-        all_cast AS (
-        SELECT ci.cast_id, m.movie_id, m.rating, m.num_ratings
-        FROM cast_in ci, movie m
-        WHERE ci.movie_id=m.movie_id
-        ORDER BY m.movie_id
-        ),
-        same_cast AS (
-        SELECT ac.cast_id, ac.movie_id, ac.rating, ac.num_ratings
-        FROM all_cast ac, target_cast tc
-        WHERE ac.cast_id=tc.cast_id
-        ),
-        mmm AS (
-        SELECT movie_id, COUNT(*) as c
-        FROM same_cast
-        GROUP BY movie_id
-        ),
-        finals AS (
-        SELECT mmm.movie_id, mmm.c, m.title, m.rating, m.num_ratings
-        FROM mmm, movie m
-        WHERE mmm.movie_id=m.movie_id
-        ORDER BY mmm.c DESC, m.rating DESC, m.num_ratings DESC
-        )
-        SELECT title, movie_id, rating, num_ratings, c
-        FROM finals
-        WHERE title!="${inputMovie}"
-        ORDER BY c DESC, rating DESC, num_ratings DESC
-        LIMIT 10;
-        ;
-
-
-    `;
-    connection.query(query, function(err, rows, fields) {
-      if (err) console.log(err);
-      else {
-        // console.log(rows);
-        res.json(rows);
-      }
-    });
-
-};
 
 
 
@@ -285,9 +202,6 @@ const groupExploration = (req, res) => {
         var inputSex = req.params.selectedSex;
     var inputAge = req.params.selectedAgegroup;
     var inputRace = req.params.selectedRace;
-    // console.log(inputSex);
-    // console.log(inputAge);
-    // console.log(inputRace);
     const query = `
     WITH a AS (
         SELECT *
@@ -373,12 +287,6 @@ const groupExploration = (req, res) => {
 
 /*Covid Info */
 const getCountry = (req, res) => {
-  // const query = `
-  // Select distinct Country_Region as country_name
-  // from Confirm_cases
-  // where Country_Region  != '"Bahamas'
-  // order by Country_Region;
-  // `;
 const query = `
 SELECT cou FROM cis550_project.Faster_countries
 WHERE try_='0';
@@ -473,17 +381,6 @@ const getDisplayed = (req, res) => {
     `;
   }
   
-  
-  /*`
-  Select c.Country_Region as Country, c.Province_State as Province,c.Confirm,d.Death,r.Recover
-  from Confirm_cases c,Death_cases d, Recover_cases r
-  where c.Country_Region = '${inputCountry}' and c.Province_State = '${inputProvince}' 
-  limit 10;
-   `*/
-  // const query = `Select c.Country_Region as Country, c.Province_State as Province,c.Confirm,d.Death,r.Recover
-  // from Confirm_cases c,Death_cases d, Recover_cases r
-  // where c.Country_Region = 'China' and c.Province_State = 'Guizhou'
-  // limit 8;`
 
 
   connection.query(query, (err, rows, fields) => {
@@ -492,13 +389,6 @@ const getDisplayed = (req, res) => {
       console.log(err);
     } 
     else {
-  
-    // console.log(rows); 
-    // console.log(req.params.country);
-    // console.log(req.params.province);
-    // console.log(req.params.selectedStartTime);
-    // console.log(req.params.selectedEndTime);
-    // console.log(res.json());
     res.json(rows);
   }
   });
@@ -509,10 +399,7 @@ const getDisplayed = (req, res) => {
 module.exports = {
 	getTop20Keywords: getTop20Keywords,
 	// clgetTopMoviesWithKeyword: getTopMoviesWithKeyword,
-	getRecs: getRecs,
   getDecades: getDecades,
-  // getGenres: getGenres,
-  // bestMoviesPerDecadeGenre: bestMoviesPerDecadeGenre,
   getMap : getMap,
   getWeeks: getWeeks,
   getByWeek:getByWeek,

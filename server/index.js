@@ -4,7 +4,7 @@ var routes = require("./routes.js");
 const cors = require('cors');
 
 const app = express();
-
+app.use(express.static(path.resolve(__dirname, '../client/build')));
 app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
@@ -15,7 +15,9 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 /* ---- (Dashboard) ---- */
 app.get('/keywords', routes.getTop20Keywords);
-
+app.get('*', (req, res) => {
+	res.sendFile(path.resolve(__dirname, '../client/build', 'index.html'));
+  });
 
 /* ---- (Best Movies) ---- */
 app.get('/decades', routes.getDecades);
